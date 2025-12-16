@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Catálogo Digital 2025 - M&M Equipamentos</title>
+    
+    <meta property="og:title" content="Catálogo M&M Equipamentos 2025">
+    <meta property="og:description" content="EPIs, Sinalização, Linha Viva e Ferramentas. Toque para ver!">
+    <meta property="og:image" content="src/img/logo.png"> <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --primary: #fca311; 
+            --dark: #14213d;    
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --text: #333333;
+            --gray: #8d99ae;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text);
+            padding-bottom: 60px; 
+        }
+
+        /* --- HEADER & CONTROLES (STICKY) --- */
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        header {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        /* Logo no Header */
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        header div { text-align: left; }
+        header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;}
+        header p { color: var(--primary); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
+
+        .controls {
+            padding: 10px 1rem;
+            background-color: var(--dark); 
+            padding-bottom: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            padding-right: 40px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem; 
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Filtros */
+        .categories-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; 
+            padding-bottom: 5px;
+        }
+        
+        .categories {
+            display: flex;
+            gap: 10px;
+            padding-right: 1rem; 
+        }
+
+        .cat-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.8);
+            padding: 8px 18px;
+            border-radius: 50px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        
+        .cat-btn.active {
+            background-color: var(--primary);
+            color: var(--dark);
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* --- GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile First: 1 Coluna */
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* --- CARD --- */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 280px; /* Altura boa para ver o produto */
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px;
+            position: relative;
+        }
+
+        .card-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .category-tag { 
+            font-size: 0.7rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .card-title { 
+            font-size: 1.15rem; 
+            font-weight: 700; 
+            margin-bottom: 0.5rem; 
+            color: var(--dark); 
+            line-height: 1.3;
+        }
+        
+        .specs {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        .specs div { margin-bottom: 4px; }
+        .specs strong { color: var(--dark); }
+
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: #25D366;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+            margin-top: auto; /* Empurra o botão para o final */
+        }
+        .btn-whatsapp:active { transform: scale(0.98); }
+        .btn-whatsapp svg { fill: white; width: 20px; height: 20px; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray);
+        }
+
+        .image-container {
+    /* ... mantenha o resto ... */
+    padding: 25px; /* Dê respiro para o produto não colada na borda */
+}
+
+        .card-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            
+            /* TRUQUE DE DESIGNER: */
+            /* Adiciona uma sombra projetada apenas no objeto (não na caixa) */
+            /* Isso faz a borracha preta se destacar do fundo branco */
+            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.35));
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.08); /* Zoom suave ao passar o mouse no card */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-wrapper">
+        <header>
+            <img src="src/img/logo.png" alt="Logo M&M" class="header-logo">
+            <div>
+                <h1>M&M Equipamentos</h1>
+                <p>Catálogo 2025</p>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar produto..." autocomplete="off">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="categories-container">
+                <div class="categories" id="categoryFilters">
+                    <button class="cat-btn active" onclick="filterProducts('all')">Todos</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="product-grid" id="grid">
+            </div>
+    </div>
+
+    <footer>
+        <p>M&M Equipamentos &copy; 2025</p>
+    
+    </footer>
+
+    <script>
+        // CONFIGURAÇÃO
+        const WHATSAPP_NUMBER = "5571991810511"; 
+
+        // BANCO DE DADOS DOS PRODUTOS
+        // Mapeado conforme seu PDF e nomes dos arquivos na pasta src/img
+        const products = [
+            // --- PÁGINA 2: CALÇOS ---
+            {
+                id: 1,
+                nome: "Calço Estabilizador Cesto Aéreo",
+                categoria: "Calços",
+                medidas: "40 x 28 x 8 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/calço estabilizador aéreo.jpg"
+            },
+            {
+                id: 2,
+                nome: "Calço para Guindauto P",
+                categoria: "Calços",
+                medidas: "35 x 35 x 5 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/calço guiaduto p.jpg"
+            },
+            {
+                id: 3,
+                nome: "Calço para Guindauto G",
+                categoria: "Calços",
+                medidas: "45 x 45 x 6 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/calço guiaduto g.jpg"
+            },
+            {
+                id: 4,
+                nome: "Calço de Roda Linha Leve (PVC)",
+                categoria: "Calços",
+                medidas: "22 x 15 x 15 cm",
+                material: "PVC",
+                img: "src/imagens/calço roda leve.jpg" 
+            },
+            {
+                id: 5,
+                nome: "Calço de Roda Linha Pesada",
+                categoria: "Calços",
+                medidas: "20 x 27 x 17 cm",
+                material: "Borracha (NBR 9735)",
+                img: "src/imagens/calço roda pesada.jpg"
+            },
+
+            // --- PÁGINA 3: ESTACIONAMENTO ---
+            {
+                id: 6,
+                nome: "Lombada / Quebra-Molas",
+                categoria: "Sinalização",
+                medidas: "50 x 35 x 5 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/quebra molas.jpg"
+            },
+            {
+                id: 7,
+                nome: "Bate Rodas",
+                categoria: "Estacionamento",
+                medidas: "55 x 15 x 10 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/bate rodas.jpg"
+            },
+            {
+                id: 8,
+                nome: "Batente Protetor de Docas",
+                categoria: "Estacionamento",
+                medidas: "55 x 15 x 10 cm",
+                material: "Borracha alta resistência",
+                img: "src/imagens/batente de docas.jpg"
+            },
+
+            // --- PÁGINA 4: POSTES ---
+            {
+                id: 9,
+                nome: "Poste Flexível L/B",
+                categoria: "Sinalização",
+                medidas: "75 cm",
+                material: "Poliuretano",
+                img: "src/imagens/poste laranja 75.jpg"
+            },
+            {
+                id: 10,
+                nome: "Poste Flexível P/A",
+                categoria: "Sinalização",
+                medidas: "75 cm",
+                material: "Poliuretano",
+                img: "src/imagens/poste preto.jpg"
+            },
+
+            // --- PÁGINA 5: LUVAS E MANGAS ---
+            {
+                id: 11,
+                nome: "Luva Isolante Classe 0",
+                categoria: "EPI",
+                medidas: "Tam. 9 e 10",
+                material: "Borracha natural",
+                img: "src/imagens/luva classee 0.jpg"
+            },
+            {
+                id: 12,
+                nome: "Luva de Cobertura",
+                categoria: "EPI",
+                medidas: "Tam. 11",
+                material: "Couro e Raspa",
+                img: "src/imagens/luva de cobertura.jpg"
+            },
+            {
+                id: 13,
+                nome: "Manga Isolante Classe 2 (20 KV)",
+                categoria: "EPI Linha Viva",
+                medidas: "Único",
+                material: "Borracha natural",
+                img: "src/imagens/manga isolante classe 2.jpg"
+            },
+
+            // --- PÁGINA 6: LINHA VIVA ---
+       /*     {
+                id: 14,
+                nome: "Banqueta Isolante 34,5 KV",
+                categoria: "Linha Viva",
+                medidas: "50 x 50 x 32 cm",
+                material: "Fibra isolante",
+                img: "src/img/banqueta isolante.png"
+            }, */
+            {
+                id: 15,
+                nome: "Vara de Manobra Seccionável",
+                categoria: "Ferramentas",
+                medidas: "8,70m (6 elementos)",
+                material: "Fibra isolante",
+                img: "src/imagens/vara de manobra seccionavel.jpg"
+            },
+            {
+                id: 16,
+                nome: "Bastão Pega Tudo",
+                categoria: "Ferramentas",
+                medidas: "2,58 m e 3,19 m",
+                material: "Fibra isolante",
+                img: "src/imagens/bastão pega tudo diferentes tamanhos.jpg"
+            },
+            {
+                id: 17,
+                nome: "Manta Isolante Classe 4",
+                categoria: "Linha Viva",
+                medidas: "914 x 914 mm",
+                material: "Borracha isolante (Tipo II)",
+                img: "src/imagens/manta isolante classe 4.jpg"
+            },
+
+            // --- PÁGINA 7: ALICATES ---
+            {
+                id: 18,
+                nome: "Alicate Corta Vergalhão 18 e 24\"",
+                categoria: "Ferramentas",
+                medidas: "18 e 24 polegadas",
+                material: "Fibra isolante / Aço",
+                img: "src/imagens/alicate.jpg" 
+           },
+         /*   {
+                id: 19,
+                nome: "Alicate Corta Vergalhão 24\"",
+                categoria: "Ferramentas",
+                medidas: "24 polegadas",
+                material: "Fibra isolante / Aço",
+                img: "src/img/alicate 24 1.png"
+            },
+            {
+                id: 20,
+                nome: "Alicate Isolante (Plastisol)",
+                categoria: "Ferramentas",
+                medidas: "24 polegadas",
+                material: "Isolado com Plastisol",
+                img: "src/img/Alicate 24 2 plastisol.png"
+            }, */
+
+            // --- PÁGINA 8: EPIs FINAIS ---
+            {
+                id: 21,
+                nome: "Luva Isolante Classe 2 (20 KV)",
+                categoria: "EPI",
+                medidas: "Tam 9 e 10",
+                material: "Borracha Natural",
+                img: "src/imagens/luva classe 2.jpg"
+            },
+            {
+                id: 22,
+                nome: "Luva Isolante Classe 4 (40 KV)",
+                categoria: "EPI",
+                medidas: "Tam 9 e 10",
+                material: "Borracha Natural",
+                img: "src/imagens/luva classee 0.jpg"
+            },
+         /*   {
+                id: 23,
+                nome: "Cinto Paraquedista",
+                categoria: "Altura",
+                medidas: "4 e 6 pontos",
+                material: "Poliéster / Aço",
+                img: "src/imagens/cinto paraquedista.jpg"
+            }, 
+            {
+                id: 24,
+                nome: "Travaquedas",
+                categoria: "Altura",
+                medidas: "P/ corda 12mm",
+                material: "Aço",
+                img: "src/img/travaquedas.png"
+            },
+            {
+                id: 25,
+                nome: "Talabarte",
+                categoria: "Altura",
+                medidas: "Abertura 55mm/21mm",
+                material: "Fita Poliéster",
+                img: "src/img/talabarte.png"
+            },
+            {
+                id: 26,
+                nome: "Cinta com Catraca",
+                categoria: "Cargas",
+                medidas: "50mm, 28mm ou 25mm",
+                material: "Poliéster",
+                img: "src/img/cinta catraca.png"
+            } */
+        ];
+
+        const grid = document.getElementById('grid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilters = document.getElementById('categoryFilters');
+
+        const zapIcon = `<svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c1.025.558 2.063.856 3.496.857h.005c3.178 0 5.765-2.587 5.765-5.766.002-3.182-2.583-5.764-5.47-5.764zm6.653 8.271c-.274.769-1.372 1.411-1.921 1.496-.514.079-1.077.106-2.578-.496-1.785-.716-2.924-2.529-3.014-2.648-.09-.118-1.117-1.488-1.117-2.836 0-1.349.704-2.012.955-2.285.223-.243.593-.304.945-.304.113 0 .227.004.331.01.353.018.528.093.722.56.242.584.825 2.016.896 2.163.071.148.118.322.023.513-.094.191-.141.31-.281.472-.124.143-.261.319-.373.43-.122.12-.249.251-.107.494.398.681 1.776 2.476 3.036 3.037.319.142.544.116.745.029.201-.088.865-1.014 1.096-1.362.231-.349.462-.29.773-.175.311.115 1.977.93 2.316 1.099.338.169.564.254.644.393.081.14.081.808-.193 1.577z"/></svg>`;
+
+        function renderProducts(filterText = '', filterCategory = 'all') {
+            grid.innerHTML = '';
+
+            const filtered = products.filter(product => {
+                const matchesText = product.nome.toLowerCase().includes(filterText.toLowerCase()) || 
+                                    product.categoria.toLowerCase().includes(filterText.toLowerCase());
+                const matchesCategory = filterCategory === 'all' || product.categoria === filterCategory;
+                
+                return matchesText && matchesCategory;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Nenhum produto encontrado 😕</h3>
+                        <p>Tente buscar por outro termo.</p>
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach(product => {
+                const msg = encodeURIComponent(`Olá! Vi o *${product.nome}* no catálogo e gostaria de saber mais.`);
+                const linkZap = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="image-container">
+                        <img src="${product.img}" alt="${product.nome}" class="card-img" loading="lazy" onerror="this.src='https://placehold.co/400x300/eee/999?text=Sem+Foto'">
+                    </div>
+                    <div class="card-body">
+                        <span class="category-tag">${product.categoria}</span>
+                        <h3 class="card-title">${product.nome}</h3>
+                        
+                        <div class="specs">
+                            <div>📏 <strong>Medidas:</strong> ${product.medidas}</div>
+                            <div>🛡️ <strong>Material:</strong> ${product.material}</div>
+                        </div>
+
+                        <a href="${linkZap}" target="_blank" class="btn-whatsapp">
+                            ${zapIcon}
+                            Solicitar Orçamento
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function generateCategories() {
+            const categories = ['all', ...new Set(products.map(p => p.categoria))];
+            
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = '';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn';
+                if(cat === 'all') btn.classList.add('active');
+                btn.textContent = cat === 'all' ? 'Todos' : cat;
+                
+                btn.onclick = () => {
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    
+                    const selectedCat = cat === 'Todos' ? 'all' : cat;
+                    renderProducts(searchInput.value, selectedCat);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const activeBtn = document.querySelector('.cat-btn.active');
+            const activeCat = activeBtn ? (activeBtn.textContent === 'Todos' ? 'all' : activeBtn.textContent) : 'all';
+            renderProducts(e.target.value, activeCat);
+        });
+
+        // Init
+        generateCategories();
+        renderProducts();
+
+    </script>
+</body>
+</html>
